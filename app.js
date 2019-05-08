@@ -86,6 +86,7 @@ getBagButtons () {
                 // add cart item/display cart item
                 this.addCartItem(cartItem);
                 // show the cart
+                this.showCart();
             });
         }
     });
@@ -117,8 +118,16 @@ addCartItem(item){
                     <p class="item-amount">${item.amount}</p>
                     <i class="fas fa-chevron-down data-id=${item.id}"></i>
                 </div>
-    `
+    `;
+    cartContent.appendChild(div);
+   
+    
 }
+showCart () {
+    cartOverlay.classList.add('transparentBcg');
+    cartDOM.classList.add('showCart');
+}
+
 }
 
 // local storage
