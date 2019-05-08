@@ -1,7 +1,7 @@
 // variables 
 
 const cartBtn = document.querySelector('.cart-btn');
-const cartCartBtn = document.querySelector('.close-cart');
+const closeCartBtn = document.querySelector('.close-cart');
 const clearCartBtn = document.querySelector('.clear -cart');
 const cartDOM = document.querySelector('.cart');
 const cartOverlay = document.querySelector('.cart-overlay');
@@ -14,7 +14,7 @@ const productDOM = document.querySelector('.products-center');
 let cart = [];
 
 // buttons
-let buttonsDOM ="" 
+let buttonsDOM = []; 
 
 // getting the products
 class Products{
@@ -119,15 +119,26 @@ addCartItem(item){
                     <i class="fas fa-chevron-down data-id=${item.id}"></i>
                 </div>
     `;
-    cartContent.appendChild(div);
-   
-    
+    cartContent.appendChild(div);   
 }
 showCart () {
     cartOverlay.classList.add('transparentBcg');
     cartDOM.classList.add('showCart');
 }
-
+setupAPP() {
+    cart = Storage.getCart();
+    this.setCartValues(cart);
+    this.populateCart(cart);
+    cartBtn.addEventListener('click',this.showCart);
+    closeCartBtn.addEventListener('click',this.hideCart);
+}
+populateCart(cart){
+    cart.forEach(item =>this.addCartItem(item));
+}
+hideCart(){
+    cartOverlay.classList.remove('transparentBcg');
+    cartDOM.classList.remove('showCart');
+}
 }
 
 // local storage
@@ -142,12 +153,16 @@ static getProduct(id){
 static saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
 }
+static getCart(){
+    return localStorage.getItem('cart')?JSON.parse(localStorage.getItem('cart')):[]
+}
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
 const ui = new UI();
 const products = new Products(); 
-
+// setup app
+ui.setupAPP();
 // get all products
 products.getProducts().then(products => {
     ui.displayProducts(products)
