@@ -2,7 +2,7 @@
 
 const cartBtn = document.querySelector('.cart-btn');
 const closeCartBtn = document.querySelector('.close-cart');
-const clearCartBtn = document.querySelector('.clear -cart');
+const clearCartBtn = document.querySelector('.clear-cart');
 const cartDOM = document.querySelector('.cart');
 const cartOverlay = document.querySelector('.cart-overlay');
 const cartItems = document.querySelector('.cart-items');
@@ -49,7 +49,7 @@ products.forEach(product => {
             <img src=${product.image} alt="product" class="product-img">
             <button class="bag-btn" data-id=${product.id}>
                 <i class="fas fa-shopping-cart"></i>
-                add to bag
+                add to cart
             </button>
         </div>
         <h3>${product.title} </h3>
@@ -139,6 +139,36 @@ hideCart(){
     cartOverlay.classList.remove('transparentBcg');
     cartDOM.classList.remove('showCart');
 }
+cartLogic(){
+    // clear cart button
+    clearCartBtn.addEventListener('click', ()=>{
+       this.clearCart(); 
+    });
+    // clear functionality
+}
+clearCart(){
+    let cartItems = cart.map (item => item.id);
+    cartItems.forEach(id => this.removeItem(id));
+    console.log(cartContent.children);
+    
+
+    while(cartContent.children.length>0){
+        cartContent.removeChild(cartContent.children[0])
+
+    } 
+    this.hideCart();
+}
+removeItem(id){
+    cart = cart.filter(item => item.id !==id);
+    this.setCartValues(cart);
+    Storage.saveCart(cart);
+    let button = this.getSingleButton(id);
+    button.disabled = false;
+    button.innerHTML = `<i class="fas fa-shopping-cart"></>add to cart`;
+}
+getSingleButton(id){
+    return buttonsDOM.find(button => button.dataset.id === id);
+}
 }
 
 // local storage
@@ -169,5 +199,6 @@ products.getProducts().then(products => {
 Storage.saveProducts(products);
 }).then(()=>{
     ui.getBagButtons();
+    ui.cartLogic()
 });
 });
